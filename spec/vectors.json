@@ -1,0 +1,295 @@
+{
+  "version": "amp/0.2",
+  "note": "Golden vectors for fg-agent-id. Signatures are computed over signing_input(context, payload) = uint16be(len(tag)) || tag || canonical_json(payload), where tag = 'fg-agent-id/v1/<context>'. Regenerate with spec/generate_vectors.py.",
+  "domain": "fg-agent-id/v1",
+  "canonical_json": [
+    {
+      "input": {
+        "b": 1,
+        "a": "\u00fc",
+        "c": [
+          3,
+          2,
+          1
+        ]
+      },
+      "expected_hex": "7b2261223a22c3bc222c2262223a312c2263223a5b332c322c315d7d"
+    },
+    {
+      "input": {
+        "z": 1,
+        "a": 2,
+        "m": 3
+      },
+      "expected_hex": "7b2261223a322c226d223a332c227a223a317d"
+    },
+    {
+      "input": {
+        "nested": {
+          "y": [
+            1,
+            {
+              "x": true
+            }
+          ],
+          "w": null
+        }
+      },
+      "expected_hex": "7b226e6573746564223a7b2277223a6e756c6c2c2279223a5b312c7b2278223a747275657d5d7d7d"
+    }
+  ],
+  "base58": [
+    {
+      "input_hex": "000001",
+      "expected": "112"
+    },
+    {
+      "input_hex": "ffff",
+      "expected": "LUv"
+    },
+    {
+      "input_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "expected": "1thX6LZfHDZZKUs92febYZhYRcXddmzfzF2NvTkPNE"
+    }
+  ],
+  "ed25519": {
+    "seed_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "public_hex": "03a107bff3ce10be1d70dd18e74bc09967e4d6309ba50d5f1ddc8664125531b8",
+    "address": "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+    "message_hex": "616d702d636f6e666f726d616e6365",
+    "signature_hex": "36d8250a48375d49f9c372c16fd21c8c7f899574d9549db510e17894f8e36e1667c56cf310a61f3415b9e8759a0d547a5aca3081b74922ca7f228300d9602009"
+  },
+  "canonical_timestamp": [
+    {
+      "input": "2026-07-19T12:30:05.123456+00:00",
+      "expected": "2026-07-19T12:30:05.123Z"
+    },
+    {
+      "input": "2026-07-19T14:00:00+02:00",
+      "expected": "2026-07-19T12:00:00.000Z"
+    },
+    {
+      "input": "2026-01-01T00:00:00+00:00",
+      "expected": "2026-01-01T00:00:00.000Z"
+    }
+  ],
+  "signing_input": [
+    {
+      "context": "delegation",
+      "payload": {
+        "a": 1
+      },
+      "expected_hex": "001966672d6167656e742d69642f76312f64656c65676174696f6e7b2261223a317d"
+    },
+    {
+      "context": "agent-card",
+      "payload": {
+        "a": 1
+      },
+      "expected_hex": "001966672d6167656e742d69642f76312f6167656e742d636172647b2261223a317d"
+    }
+  ],
+  "key_commitment": {
+    "signing_public_hex": "29acbae141bccaf0b22e1a94d34d0bc7361e526d0bfe12c89794bc9322966dd7",
+    "expected": "24f6ed6acbfe1009c030d7ca567c33ca4830911498236b5561a6c82abec5de28"
+  },
+  "artifacts": {
+    "agent_card": {
+      "context": "agent-card",
+      "payload": {
+        "amp": "0.1",
+        "address": "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+        "name": "conformance-agent",
+        "kind": "agent",
+        "operator": "amp:key:3ogUn1GNXoASaRbxPNeVJnVv5rG4EPBtmQmX61jVorUe",
+        "signing_key": "FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+        "agreement_key": "7xVyqdBygJ5LPXWqFtoN4Qozewzj6Nq6w5YudheQVW6A",
+        "agreement_prekey": null,
+        "payload_types": [
+          "application/json",
+          "text/plain"
+        ],
+        "endpoints": {
+          "relay": "https://relay.example/amp",
+          "wake": "https://agent.example/wake"
+        },
+        "policy_summary": "conformance"
+      },
+      "signing_input_hex": "001966672d6167656e742d69642f76312f6167656e742d636172647b2261646472657373223a22616d703a6b65793a464165347369734739356f5a343277376275556e357145453454416e66545446506967755a55486d686946222c2261677265656d656e745f6b6579223a223778567971644279674a354c5058577146746f4e34516f7a65777a6a364e7136773559756468655156573641222c2261677265656d656e745f7072656b6579223a6e756c6c2c22616d70223a22302e31222c22656e64706f696e7473223a7b2272656c6179223a2268747470733a2f2f72656c61792e6578616d706c652f616d70222c2277616b65223a2268747470733a2f2f6167656e742e6578616d706c652f77616b65227d2c226b696e64223a226167656e74222c226e616d65223a22636f6e666f726d616e63652d6167656e74222c226f70657261746f72223a22616d703a6b65793a336f67556e31474e586f415361526278504e65564a6e567635724734455042746d516d5836316a566f725565222c227061796c6f61645f7479706573223a5b226170706c69636174696f6e2f6a736f6e222c22746578742f706c61696e225d2c22706f6c6963795f73756d6d617279223a22636f6e666f726d616e6365222c227369676e696e675f6b6579223a22464165347369734739356f5a343277376275556e357145453454416e66545446506967755a55486d686946227d",
+      "signature_b64": "XLo2Jxz8+lDEeliyMez7JB1GBz6rSdX+8mKuGTw9D1yePbvNusgic9uKiFlHAx4/lAaNXVQgwmCpKosULdXSAQ=="
+    },
+    "agent_card_critical": {
+      "context": "agent-card",
+      "payload": {
+        "amp": "0.1",
+        "address": "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+        "name": "conformance-agent",
+        "kind": "agent",
+        "operator": "amp:key:3ogUn1GNXoASaRbxPNeVJnVv5rG4EPBtmQmX61jVorUe",
+        "signing_key": "FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+        "agreement_key": "7xVyqdBygJ5LPXWqFtoN4Qozewzj6Nq6w5YudheQVW6A",
+        "agreement_prekey": null,
+        "payload_types": [
+          "application/json",
+          "text/plain"
+        ],
+        "endpoints": {
+          "relay": "https://relay.example/amp"
+        },
+        "policy_summary": "conformance",
+        "critical": [
+          "x-conformance"
+        ],
+        "x-conformance": "required"
+      },
+      "signing_input_hex": "001966672d6167656e742d69642f76312f6167656e742d636172647b2261646472657373223a22616d703a6b65793a464165347369734739356f5a343277376275556e357145453454416e66545446506967755a55486d686946222c2261677265656d656e745f6b6579223a223778567971644279674a354c5058577146746f4e34516f7a65777a6a364e7136773559756468655156573641222c2261677265656d656e745f7072656b6579223a6e756c6c2c22616d70223a22302e31222c22637269746963616c223a5b22782d636f6e666f726d616e6365225d2c22656e64706f696e7473223a7b2272656c6179223a2268747470733a2f2f72656c61792e6578616d706c652f616d70227d2c226b696e64223a226167656e74222c226e616d65223a22636f6e666f726d616e63652d6167656e74222c226f70657261746f72223a22616d703a6b65793a336f67556e31474e586f415361526278504e65564a6e567635724734455042746d516d5836316a566f725565222c227061796c6f61645f7479706573223a5b226170706c69636174696f6e2f6a736f6e222c22746578742f706c61696e225d2c22706f6c6963795f73756d6d617279223a22636f6e666f726d616e6365222c227369676e696e675f6b6579223a22464165347369734739356f5a343277376275556e357145453454416e66545446506967755a55486d686946222c22782d636f6e666f726d616e6365223a227265717569726564227d",
+      "signature_b64": "G1efCJo+6lzxu+KMxv6eSpGBHtl0SV2FSAb2yPBaaJ9OhZKameNRMBu1FrRyBhmszk4pNNfAhR4MB544BRv8DA=="
+    },
+    "delegation": {
+      "context": "delegation",
+      "payload": {
+        "issuer": "amp:key:3ogUn1GNXoASaRbxPNeVJnVv5rG4EPBtmQmX61jVorUe",
+        "subject": "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+        "scopes": [
+          "read",
+          "write"
+        ],
+        "issued_at": "2026-01-01T00:00:00.000Z",
+        "expires_at": "2026-02-01T00:00:00.000Z"
+      },
+      "signing_input_hex": "001966672d6167656e742d69642f76312f64656c65676174696f6e7b22657870697265735f6174223a22323032362d30322d30315430303a30303a30302e3030305a222c226973737565645f6174223a22323032362d30312d30315430303a30303a30302e3030305a222c22697373756572223a22616d703a6b65793a336f67556e31474e586f415361526278504e65564a6e567635724734455042746d516d5836316a566f725565222c2273636f706573223a5b2272656164222c227772697465225d2c227375626a656374223a22616d703a6b65793a464165347369734739356f5a343277376275556e357145453454416e66545446506967755a55486d686946227d",
+      "signature_b64": "K/+ZBckfG/BG94XX1kLO52MjGiwCsjHOwSMVRbQ4Zh2eb7kutClmgWfbWh3RUQhsJvl5eE0XpOi22NRB1pAsBg==",
+      "digest": "f3c1e252f94d77ed47bf0c39039d4de29bce1a2752b06ae7bf6a6f4e6a1fadc9"
+    },
+    "delegation_critical": {
+      "context": "delegation",
+      "payload": {
+        "issuer": "amp:key:3ogUn1GNXoASaRbxPNeVJnVv5rG4EPBtmQmX61jVorUe",
+        "subject": "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+        "scopes": [
+          "pay:usdc:tx<=25:total<=100",
+          "read"
+        ],
+        "issued_at": "2026-01-01T00:00:00.000Z",
+        "expires_at": "2026-02-01T00:00:00.000Z",
+        "critical": [
+          "x-conformance"
+        ],
+        "x-conformance": "required"
+      },
+      "signing_input_hex": "001966672d6167656e742d69642f76312f64656c65676174696f6e7b22637269746963616c223a5b22782d636f6e666f726d616e6365225d2c22657870697265735f6174223a22323032362d30322d30315430303a30303a30302e3030305a222c226973737565645f6174223a22323032362d30312d30315430303a30303a30302e3030305a222c22697373756572223a22616d703a6b65793a336f67556e31474e586f415361526278504e65564a6e567635724734455042746d516d5836316a566f725565222c2273636f706573223a5b227061793a757364633a74783c3d32353a746f74616c3c3d313030222c2272656164225d2c227375626a656374223a22616d703a6b65793a464165347369734739356f5a343277376275556e357145453454416e66545446506967755a55486d686946222c22782d636f6e666f726d616e6365223a227265717569726564227d",
+      "signature_b64": "tASsB5xpS3mXtfIv465QVkcb9oyDTZA9TYD0lFvWBYXTaGN8mxywIfpTfKMngjDFjesImEqCn9v5fxZomh70Dg=="
+    },
+    "revocation": {
+      "context": "revocation",
+      "payload": {
+        "issuer": "amp:key:3ogUn1GNXoASaRbxPNeVJnVv5rG4EPBtmQmX61jVorUe",
+        "delegation_digest": "f3c1e252f94d77ed47bf0c39039d4de29bce1a2752b06ae7bf6a6f4e6a1fadc9",
+        "revoked_at": "2026-01-01T00:00:00.000Z"
+      },
+      "signing_input_hex": "001966672d6167656e742d69642f76312f7265766f636174696f6e7b2264656c65676174696f6e5f646967657374223a2266336331653235326639346437376564343762663063333930333964346465323962636531613237353262303661653762663661366634653661316661646339222c22697373756572223a22616d703a6b65793a336f67556e31474e586f415361526278504e65564a6e567635724734455042746d516d5836316a566f725565222c227265766f6b65645f6174223a22323032362d30312d30315430303a30303a30302e3030305a227d",
+      "signature_b64": "ftELVn5euT5RqFwgPBHZUZcw0ieV7ied/MYwGpmBilqlgXC6CJm/pzVBBhFrhkTFpCeb8NLBurlxJ3tFxFONAQ=="
+    },
+    "key_revocation": {
+      "context": "key-revocation",
+      "payload": {
+        "address": "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+        "chain": null,
+        "issuer": "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+        "revoked_at": "2026-01-01T00:00:00.000Z"
+      },
+      "signing_input_hex": "001d66672d6167656e742d69642f76312f6b65792d7265766f636174696f6e7b2261646472657373223a22616d703a6b65793a464165347369734739356f5a343277376275556e357145453454416e66545446506967755a55486d686946222c22636861696e223a6e756c6c2c22697373756572223a22616d703a6b65793a464165347369734739356f5a343277376275556e357145453454416e66545446506967755a55486d686946222c227265766f6b65645f6174223a22323032362d30312d30315430303a30303a30302e3030305a227d",
+      "signature_b64": "Y5H4cofAaZNt3sA8e496pq3Yi98tmdR4/TOmWN+1LkJLt01PWDDx5GlVcvpmvvspG88OnUS7E22tl4I3khj6Cw=="
+    },
+    "inception": {
+      "context": "inception",
+      "payload": {
+        "address": "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+        "created_at": "2026-01-01T00:00:00.000Z",
+        "next_commitment": "24f6ed6acbfe1009c030d7ca567c33ca4830911498236b5561a6c82abec5de28"
+      },
+      "signing_input_hex": "001866672d6167656e742d69642f76312f696e63657074696f6e7b2261646472657373223a22616d703a6b65793a464165347369734739356f5a343277376275556e357145453454416e66545446506967755a55486d686946222c22637265617465645f6174223a22323032362d30312d30315430303a30303a30302e3030305a222c226e6578745f636f6d6d69746d656e74223a2232346636656436616362666531303039633033306437636135363763333363613438333039313134393832333662353536316136633832616265633564653238227d",
+      "signature_b64": "4eCInDO1K4a5iYlhXcD9qkxV5nvThzaJR3y/LKjJ+1xg+Eyb6F3rZUGJlv+8M7YdSVd35QFJ8D4PDtT36s9ECQ=="
+    },
+    "key_rotation": {
+      "context": "key-rotation",
+      "payload": {
+        "identity": "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+        "next_address": "amp:key:3ogUn1GNXoASaRbxPNeVJnVv5rG4EPBtmQmX61jVorUe",
+        "next_commitment": "03396219237f75a64f12aeb7f39723abf400b160c364980a765dac24aeba2464",
+        "previous": "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+        "rotated_at": "2026-01-01T00:00:00.000Z",
+        "sequence": 1
+      },
+      "signing_input_hex": "001b66672d6167656e742d69642f76312f6b65792d726f746174696f6e7b226964656e74697479223a22616d703a6b65793a464165347369734739356f5a343277376275556e357145453454416e66545446506967755a55486d686946222c226e6578745f61646472657373223a22616d703a6b65793a336f67556e31474e586f415361526278504e65564a6e567635724734455042746d516d5836316a566f725565222c226e6578745f636f6d6d69746d656e74223a2230333339363231393233376637356136346631326165623766333937323361626634303062313630633336343938306137363564616332346165626132343634222c2270726576696f7573223a22616d703a6b65793a464165347369734739356f5a343277376275556e357145453454416e66545446506967755a55486d686946222c22726f74617465645f6174223a22323032362d30312d30315430303a30303a30302e3030305a222c2273657175656e6365223a317d",
+      "signature_b64": "1JZ+p8SKGO16VsRYhP4ps+ELDJe46ZOFu1+89WYkfczoYqpf4i8jCeqbtQQb/OK07vkm17vWqXdvKIQVGdnlBQ=="
+    },
+    "challenge_response": {
+      "context": "challenge-response",
+      "payload": {
+        "address": "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+        "audience": "https://workspace.example",
+        "challenge_id": "00000000-0000-4000-8000-000000000001",
+        "nonce": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=",
+        "purpose": "authenticate"
+      },
+      "signing_input_hex": "002166672d6167656e742d69642f76312f6368616c6c656e67652d726573706f6e73657b2261646472657373223a22616d703a6b65793a464165347369734739356f5a343277376275556e357145453454416e66545446506967755a55486d686946222c2261756469656e6365223a2268747470733a2f2f776f726b73706163652e6578616d706c65222c226368616c6c656e67655f6964223a2230303030303030302d303030302d343030302d383030302d303030303030303030303031222c226e6f6e6365223a2241414543417751464267634943516f4c4441304f4478415245684d554652595847426b61477877644868383d222c22707572706f7365223a2261757468656e746963617465227d",
+      "signature_b64": "l2sZJ3/BuNxUH/GW5lqQk9jV1oGMS7P2vbHk43wAwyaCwBpVmD2k2xvfTk+UT/vDxH7P0IV34nPsDyivOjZACA=="
+    }
+  },
+  "did_document": {
+    "address": "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+    "did": "did:amp:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+    "document": {
+      "@context": [
+        "https://www.w3.org/ns/did/v1",
+        "https://w3id.org/security/suites/ed25519-2020/v1",
+        "https://w3id.org/security/suites/x25519-2020/v1"
+      ],
+      "id": "did:amp:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+      "alsoKnownAs": [
+        "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF"
+      ],
+      "verificationMethod": [
+        {
+          "id": "did:amp:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF#key-1",
+          "type": "Ed25519VerificationKey2020",
+          "controller": "did:amp:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+          "publicKeyMultibase": "z6MkehRgf7yJbgaGfYsdoAsKdBPE3dj2CYhowQdcjqSJgvVd"
+        }
+      ],
+      "authentication": [
+        "did:amp:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF#key-1"
+      ],
+      "assertionMethod": [
+        "did:amp:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF#key-1"
+      ],
+      "keyAgreement": [
+        {
+          "id": "did:amp:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF#key-agreement",
+          "type": "X25519KeyAgreementKey2020",
+          "controller": "did:amp:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+          "publicKeyMultibase": "z6LSidg9Mvzqmko5UutbnYKKP12UW6Xqnz1Fp4Gb8AHwCsrv"
+        }
+      ],
+      "controller": "did:amp:3ogUn1GNXoASaRbxPNeVJnVv5rG4EPBtmQmX61jVorUe",
+      "service": [
+        {
+          "id": "did:amp:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF#relay",
+          "type": "AMPRelay",
+          "serviceEndpoint": "https://relay.example/amp"
+        },
+        {
+          "id": "did:amp:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF#wake",
+          "type": "AMPEndpoint",
+          "serviceEndpoint": "https://agent.example/wake"
+        }
+      ]
+    }
+  },
+  "addresses": {
+    "a": "amp:key:FAe4sisG95oZ42w7buUn5qEE4TAnfTTFPiguZUHmhiF",
+    "b": "amp:key:3ogUn1GNXoASaRbxPNeVJnVv5rG4EPBtmQmX61jVorUe",
+    "c": "amp:key:3WTypo2uYrwMHJ5yFFwUPX6T25n39PwNwke7pz22P4Ut"
+  }
+}

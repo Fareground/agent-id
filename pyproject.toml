@@ -1,0 +1,57 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fg-agent-id"
+version = "0.1.0"
+license = { text = "Apache-2.0" }
+description = "Self-certifying agent identity: keys, addresses, did:amp, signed cards, owners, and delegation chains."
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ["ai", "agents", "identity", "did", "delegation", "ed25519", "self-certifying"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Security :: Cryptography",
+]
+dependencies = [
+    "cryptography>=42.0",
+]
+
+[project.optional-dependencies]
+# Runtime stays zero-dependency beyond `cryptography`; the redis extra only
+# enables the optional RedisChallengeStore backend.
+redis = [
+    "redis>=4.0",
+]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.8",
+    "build>=1.0",
+    "fakeredis>=2.20",
+]
+
+[project.urls]
+Repository = "https://github.com/Fareground/agent-id"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/fg_agent_id"]
+artifacts = ["src/fg_agent_id/py.typed"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
