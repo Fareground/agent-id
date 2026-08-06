@@ -185,10 +185,14 @@ def test_clock_skew_leeway_tolerates_a_freshly_minted_grant():
     (NTP skew) verifies within leeway but still fails without it."""
     from datetime import UTC, datetime, timedelta
 
-    from fg_agent_id import Delegation, DelegationChain, OwnerIdentity, address_from_signing_key
-    from fg_agent_id import KeyPair
+    from fg_agent_id import (
+        Delegation,
+        DelegationChain,
+        KeyPair,
+        OwnerIdentity,
+        address_from_signing_key,
+    )
     from fg_agent_id.errors import DelegationError
-
     from fg_agent_id.signing import CONTEXT_DELEGATION, sign_payload
 
     owner = OwnerIdentity.generate("acme")
@@ -215,9 +219,8 @@ def test_clock_skew_leeway_tolerates_a_freshly_minted_grant():
 def test_clock_skew_leeway_tolerates_a_just_expired_grant():
     from datetime import UTC, datetime, timedelta
 
-    from fg_agent_id import Delegation, OwnerIdentity, address_from_signing_key, KeyPair
+    from fg_agent_id import Delegation, KeyPair, OwnerIdentity, address_from_signing_key
     from fg_agent_id.errors import DelegationError
-
     from fg_agent_id.signing import CONTEXT_DELEGATION, sign_payload
 
     owner = OwnerIdentity.generate("acme")
