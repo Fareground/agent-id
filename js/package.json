@@ -30,7 +30,7 @@
   "scripts": {
     "build": "tsc",
     "prepare": "tsc",
-    "test": "tsc && node --test \"dist/test/*.test.js\"",
+    "test": "tsc && node --test dist/test/*.test.js",
     "conformance": "tsc && node --test dist/test/conformance.test.js"
   },
   "devDependencies": {
