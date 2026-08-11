@@ -110,3 +110,9 @@ export {
   didDocument,
   resolve,
 } from "./did.js";
+export {
+  AgentIdentity,
+  OwnerIdentity,
+  ParticipantIdentity,
+  DEFAULT_DELEGATION_TTL_SECONDS,
+} from "./identity.js";
