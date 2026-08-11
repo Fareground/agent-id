@@ -13,6 +13,8 @@
 
 <p align="center">
   <a href="https://github.com/Fareground/agent-id/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/Fareground/agent-id/ci.yml?branch=main&style=flat-square&label=CI" /></a>
+  <a href="https://pypi.org/project/fg-agent-id/"><img alt="PyPI" src="https://img.shields.io/pypi/v/fg-agent-id?style=flat-square" /></a>
+  <a href="https://www.npmjs.com/package/@fareground/agent-id"><img alt="npm" src="https://img.shields.io/npm/v/%40fareground%2Fagent-id?style=flat-square" /></a>
   <img alt="Python" src="https://img.shields.io/badge/python-3.11+-3b82f6?style=flat-square" />
   <img alt="TypeScript" src="https://img.shields.io/badge/typescript-node%2020+-2dd4a7?style=flat-square" />
 </p>
@@ -71,13 +73,13 @@ as a standalone standard any protocol can adopt.
 **Python** (reference implementation, only dependency is `cryptography`):
 
 ```bash
-pip install git+https://github.com/Fareground/agent-id.git
+pip install fg-agent-id
 ```
 
 The optional Redis-backed challenge store is an extra:
 
 ```bash
-pip install "fg-agent-id[redis] @ git+https://github.com/Fareground/agent-id.git"
+pip install "fg-agent-id[redis]"
 ```
 
 **TypeScript** (zero runtime dependencies, WebCrypto):
@@ -85,6 +87,8 @@ pip install "fg-agent-id[redis] @ git+https://github.com/Fareground/agent-id.git
 ```bash
 npm install @fareground/agent-id
 ```
+
+The npm package is ESM-only — use `import`, not `require`.
 
 ## Usage
 

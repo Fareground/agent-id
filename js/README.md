@@ -18,6 +18,14 @@ Python reference.
   names; verification fails on a critical field this implementation does not
   understand, unless the caller declares it understood.
 
+## Install
+
+```bash
+npm install @fareground/agent-id
+```
+
+The package is ESM-only — use `import`, not `require`.
+
 ## Build & conformance
 
 ```bash
