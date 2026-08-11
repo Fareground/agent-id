@@ -142,8 +142,12 @@ assert registry.resolve(identity.identity) == rotated.address
 **Keys at rest** (scrypt + ChaCha20-Poly1305):
 
 ```python
-sealed = agent.keys.to_encrypted_bytes(passphrase)
-agent_keys = KeyPair.from_encrypted_bytes(sealed, passphrase)
+from fg_agent_id import AgentIdentity, KeyPair
+
+agent = AgentIdentity.generate("keeper")
+sealed = agent.keys.to_encrypted_bytes("correct horse battery staple")
+restored = KeyPair.from_encrypted_bytes(sealed, "correct horse battery staple")
+assert restored.public.signing == agent.keys.public.signing
 ```
 
 ### TypeScript
@@ -152,35 +156,50 @@ Crypto operations are `async` (WebCrypto). Everything is exported from
 `@fareground/agent-id`.
 
 ```ts
-import {
-  KeyPair, addressFromSigningKey,
-  AgentCard, Delegation, DelegationChain,
-  Challenge, ChallengeStore,
-} from "@fareground/agent-id";
+import { OwnerIdentity, AgentCard, ChallengeStore } from "@fareground/agent-id";
 
-const keys = await KeyPair.generate();
-const address = addressFromSigningKey(keys.public_.signing);
+// Same facade as Python: an owner mints an authorized agent
+const owner = await OwnerIdentity.generate("acme-corp");
+const agent = await owner.createAgent("acme-buyer", ["converse", "negotiate"]);
 
 // Signed, self-certifying card
-const card = await AgentCard.create({ keys, address, name: "my-agent" });
-await card.verify();
+const card = await agent.card({ endpoints: { http: "https://buyer.example/inbox" } });
+await AgentCard.fromJSON(card.toJSON()).verify(); // verifies from plain JSON, no registry
 
 // Delegation chain, scopes = intersection of all links
-const grant = await Delegation.grant({
-  issuerKeys: keys, issuerAddress: address,
-  subjectAddress: worker, scopes: ["read"], ttlSeconds: 3600,
-});
-const scopes = await new DelegationChain([grant]).verify(worker);
+const scopes = await agent.delegationChain.verify(agent.address);
 
-// Proof of possession (audience-bound)
+// Proof of possession (audience-bound, single-use)
 const store = new ChallengeStore();
 const challenge = store.issue("https://verifier.example");
-const response = await challenge.respond(keys, address);
-await response.verify(store.consume(response.challengeId)!, "https://verifier.example");
+const response = await challenge.respond(agent.keys, agent.address);
+const issued = store.consume(response.challengeId);
+if (!issued) throw new Error("challenge already used or expired");
+await response.verify(issued, "https://verifier.example");
 ```
 
 See [`js/README.md`](js/README.md) for the full TypeScript surface and parity
-notes against the Python reference.
+notes against the Python reference. Runnable versions of these flows — card
+issue/verify, proof of possession, key rotation — live in
+[`examples/`](examples/) for both languages.
+
+## Supported API
+
+Two tiers, one contract:
+
+- **Facade tier (use this).** The high-level classes and verify entry points:
+  `AgentIdentity` / `OwnerIdentity` (aliased `ParticipantIdentity`),
+  `AgentCard`, `Delegation` / `DelegationChain` / `Revocation` /
+  `KeyRevocation` / `RevocationRegistry`, `ChallengeStore` / `Challenge` /
+  `ChallengeResponse`, `RotatingIdentity` (Python) / rotation classes,
+  and the `did:amp` helpers. This is the stable, supported surface — it moves
+  only with a package version bump and a changelog entry.
+- **Wire tier (interop plumbing).** `canonical_json`, `signing_input`,
+  `sign_payload` / `verify_payload` / `verify_by_address`, the `CONTEXT_*`
+  constants and `DOMAIN`. Exported so independent implementations can test
+  byte-for-byte against the golden vectors — but it is the wire format itself:
+  any change here is a spec change (see `spec/SPEC.md`), not an API tweak.
+  Build on the facade tier unless you are implementing the spec.
 
 ## Concepts
 
@@ -204,6 +223,7 @@ notes against the Python reference.
 src/fg_agent_id/   Python reference implementation
 js/                TypeScript implementation (@fareground/agent-id)
 spec/              Wire spec (SPEC.md) + cross-implementation golden vectors
+examples/          Runnable examples (python/ and js/)
 tests/             Python test suite
 ```
 
