@@ -116,3 +116,10 @@ export {
   ParticipantIdentity,
   DEFAULT_DELEGATION_TTL_SECONDS,
 } from "./identity.js";
+export {
+  encryptKeys,
+  decryptKeys,
+  saveKeys,
+  loadKeys,
+  loadOrCreateKeys,
+} from "./keyfile.js";

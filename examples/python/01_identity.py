@@ -1,16 +1,27 @@
-"""Issue and verify a signed agent card.
+"""A persistent identity in one line, then a signed, self-verifying card.
 
-An owner (cold key) mints an agent (hot key) with scoped authority, the
-agent publishes a self-verifying card, and any peer verifies both the card
-and the delegation chain with no registry in sight.
+`load_or_create` mints a keypair on the first run and reloads it on every
+later one — run this file twice and the addresses match. Then an owner
+(cold key) mints an agent (hot key) with scoped authority, the agent
+publishes a card, and any peer verifies it with no registry in sight.
 
 Run (after `pip install -e .` from the repo root):
 
     python examples/python/01_identity.py
 """
 
-from fg_agent_id import AgentCard, OwnerIdentity
+import tempfile
+from pathlib import Path
 
+from fg_agent_id import AgentCard, AgentIdentity, OwnerIdentity
+
+# --- Hello, identity: the one-liner (persisted; same address every run) ---
+key_path = Path(tempfile.gettempdir()) / "fg-example-agent.key"
+me = AgentIdentity.load_or_create(key_path)  # pass a passphrase to seal at rest
+print(f"persistent id : {me.address}")
+assert AgentIdentity.load_or_create(key_path).address == me.address
+
+# --- An owner stands behind an agent ---
 owner = OwnerIdentity.generate("acme-corp")
 agent = owner.create_agent("acme-buyer", scopes={"converse", "negotiate"})
 

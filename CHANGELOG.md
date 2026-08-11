@@ -24,6 +24,15 @@ in lockstep (see CONTRIBUTING.md).
 
 ### Added
 
+- **One-liner persistence.** `AgentIdentity.load_or_create(path, passphrase=None)`
+  / `OwnerIdentity.load_or_create` (and the TS `loadOrCreate` equivalents):
+  load the key file if it exists, otherwise generate and save — encrypted at
+  rest when a passphrase is given. No new formats: plain files are the raw
+  64-byte form, sealed files the existing `FGID` v1 container, and TypeScript
+  now reads and writes both byte-compatibly (Node crypto scrypt +
+  ChaCha20-Poly1305). Cross-language round-trip is tested (Python writes,
+  TS loads, addresses match). Bare helpers exported as
+  `save_keys` / `load_keys` / `load_or_create_keys`.
 - **TypeScript facade layer.** `AgentIdentity` / `OwnerIdentity`
   (+ `ParticipantIdentity` alias) ported from the Python reference, async
   where WebCrypto requires it, with mirrored tests.

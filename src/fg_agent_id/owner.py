@@ -10,10 +10,12 @@ allowed to do what.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from .address import address_from_signing_key
 from .delegation import Delegation, DelegationChain, KeyRevocation, Revocation
+from .keyfile import load_or_create_keys
 from .keys import KeyPair
 
 if TYPE_CHECKING:
@@ -32,6 +34,22 @@ class OwnerIdentity:
     @classmethod
     def generate(cls, name: str) -> OwnerIdentity:
         return cls(keys=KeyPair.generate(), name=name)
+
+    @classmethod
+    def load_or_create(
+        cls,
+        path: str | Path,
+        passphrase: str | None = None,
+        *,
+        name: str | None = None,
+    ) -> OwnerIdentity:
+        """Load the owner keypair at ``path`` or mint and save one.
+
+        Owner keys are cold keys — prefer a passphrase here even more than for
+        agents. ``name`` defaults to the file's stem.
+        """
+        keys = load_or_create_keys(path, passphrase)
+        return cls(keys=keys, name=name or Path(path).stem)
 
     @property
     def address(self) -> str:

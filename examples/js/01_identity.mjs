@@ -1,5 +1,6 @@
 /**
- * Issue and verify a signed agent card (TypeScript build).
+ * A persistent identity in one line (loadOrCreate), then a signed,
+ * self-verifying agent card (TypeScript build).
  *
  * Run from the repo root (build once with `cd js && npm install`):
  *
@@ -8,10 +9,19 @@
 
 import {
   AgentCard,
+  AgentIdentity,
   OwnerIdentity,
   addressToDid,
 } from "../../js/dist/src/index.js";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
+// --- Hello, identity: the one-liner (persisted; same address every run) ---
+const keyPath = join(tmpdir(), "fg-example-agent.key");
+const me = await AgentIdentity.loadOrCreate(keyPath); // pass a passphrase to seal at rest
+console.log(`persistent id : ${me.address}`);
+
+// --- An owner stands behind an agent ---
 const owner = await OwnerIdentity.generate("acme-corp");
 const agent = await owner.createAgent("acme-buyer", ["converse", "negotiate"]);
 

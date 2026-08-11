@@ -8,6 +8,7 @@ Protocol (AMP), usable by any protocol that needs verifiable agent identity.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from .address import address_from_signing_key, signing_key_from_address
 from .canonical import canonical_json
@@ -53,6 +54,7 @@ from .feed import (
     apply_feed_delta,
     sync_registry,
 )
+from .keyfile import load_keys, load_or_create_keys, save_keys
 from .keys import KeyPair, PublicKeys
 from .proof import (
     PURPOSE_AUTHENTICATE,
@@ -117,6 +119,24 @@ class AgentIdentity:
         kind: ParticipantKind = ParticipantKind.AGENT,
     ) -> AgentIdentity:
         return cls(keys=KeyPair.generate(), name=name, operator=operator, kind=kind)
+
+    @classmethod
+    def load_or_create(
+        cls,
+        path: str | Path,
+        passphrase: str | None = None,
+        *,
+        name: str | None = None,
+        operator: str | None = None,
+        kind: ParticipantKind = ParticipantKind.AGENT,
+    ) -> AgentIdentity:
+        """One-liner persistence: load the keypair at ``path`` or mint and save one.
+
+        Encrypted at rest when a passphrase is given (FGID container);
+        otherwise the raw 64-byte form. ``name`` defaults to the file's stem.
+        """
+        keys = load_or_create_keys(path, passphrase)
+        return cls(keys=keys, name=name or Path(path).stem, operator=operator, kind=kind)
 
     @property
     def address(self) -> str:
@@ -235,9 +255,12 @@ __all__ = [
     "did_to_address",
     "is_spend_scope",
     "issue_device_delegation",
+    "load_keys",
+    "load_or_create_keys",
     "key_commitment",
     "parse_spend_scope",
     "resolve",
+    "save_keys",
     "sign_payload",
     "signing_input",
     "signing_key_from_address",

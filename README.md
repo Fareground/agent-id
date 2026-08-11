@@ -88,6 +88,30 @@ npm install @fareground/agent-id
 
 ## Usage
 
+### Hello, identity
+
+One line gets you a persistent identity — created on first run, reloaded ever
+after (same address every time):
+
+```python
+from fg_agent_id import AgentIdentity
+
+me = AgentIdentity.load_or_create("agent.key")
+print(me.address)                   # amp:key:<base58>, stable across runs
+```
+
+```ts
+import { AgentIdentity } from "@fareground/agent-id";
+
+const me = await AgentIdentity.loadOrCreate("agent.key");
+console.log(me.address);
+```
+
+Pass a passphrase — `load_or_create("agent.key", "s3cret")` — and the file is
+sealed at rest (scrypt + ChaCha20-Poly1305). Either way the key file is
+byte-compatible across both languages. Owners persist the same way:
+`OwnerIdentity.load_or_create("owner.key", ...)`.
+
 ### Python
 
 ```python
@@ -188,7 +212,8 @@ issue/verify, proof of possession, key rotation — live in
 Two tiers, one contract:
 
 - **Facade tier (use this).** The high-level classes and verify entry points:
-  `AgentIdentity` / `OwnerIdentity` (aliased `ParticipantIdentity`),
+  `AgentIdentity` / `OwnerIdentity` (aliased `ParticipantIdentity`) with
+  `load_or_create` persistence and the keyfile helpers,
   `AgentCard`, `Delegation` / `DelegationChain` / `Revocation` /
   `KeyRevocation` / `RevocationRegistry`, `ChallengeStore` / `Challenge` /
   `ChallengeResponse`, `RotatingIdentity` (Python) / rotation classes,

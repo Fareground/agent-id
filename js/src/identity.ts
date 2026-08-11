@@ -16,10 +16,18 @@ import { addressFromSigningKey } from "./address.js";
 import { type JsonValue } from "./canonical.js";
 import { AgentCard, type ParticipantKind } from "./card.js";
 import { Delegation, DelegationChain, KeyRevocation, Revocation } from "./delegation.js";
+import { loadOrCreateKeys } from "./keyfile.js";
 import { KeyPair } from "./keys.js";
 import { DEFAULT_PROTOCOL_VERSION } from "./version.js";
 
 export const DEFAULT_DELEGATION_TTL_SECONDS = 30 * 24 * 3600;
+
+/** Last path segment without its extension — the default identity name. */
+function fileStem(path: string): string {
+  const base = path.split(/[\\/]/).pop() ?? path;
+  const dot = base.lastIndexOf(".");
+  return dot > 0 ? base.slice(0, dot) : base;
+}
 
 /** A participant's own identity: key material + name + delegation chain. */
 export class AgentIdentity {
@@ -51,6 +59,26 @@ export class AgentIdentity {
     return new AgentIdentity({
       keys: await KeyPair.generate(),
       name,
+      operator: options.operator ?? null,
+      kind: options.kind ?? "agent",
+    });
+  }
+
+  /**
+   * One-liner persistence: load the keypair at `path` or mint and save one.
+   * Encrypted at rest when a passphrase is given (FGID container, byte-
+   * compatible with Python); otherwise the raw 64-byte form. `name` defaults
+   * to the file's stem. Node only.
+   */
+  static async loadOrCreate(
+    path: string,
+    passphrase: string | null = null,
+    options: { name?: string; operator?: string | null; kind?: ParticipantKind } = {}
+  ): Promise<AgentIdentity> {
+    const keys = await loadOrCreateKeys(path, passphrase);
+    return new AgentIdentity({
+      keys,
+      name: options.name ?? fileStem(path),
       operator: options.operator ?? null,
       kind: options.kind ?? "agent",
     });
@@ -134,6 +162,19 @@ export class OwnerIdentity {
 
   static async generate(name: string): Promise<OwnerIdentity> {
     return new OwnerIdentity({ keys: await KeyPair.generate(), name });
+  }
+
+  /**
+   * Load the owner keypair at `path` or mint and save one. Owner keys are
+   * cold keys — prefer a passphrase here even more than for agents. Node only.
+   */
+  static async loadOrCreate(
+    path: string,
+    passphrase: string | null = null,
+    options: { name?: string } = {}
+  ): Promise<OwnerIdentity> {
+    const keys = await loadOrCreateKeys(path, passphrase);
+    return new OwnerIdentity({ keys, name: options.name ?? fileStem(path) });
   }
 
   get address(): string {
