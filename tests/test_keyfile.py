@@ -9,6 +9,7 @@ import pytest
 
 from fg_agent_id import (
     AgentIdentity,
+    KeyFileError,
     OwnerIdentity,
     load_keys,
     load_or_create_keys,
@@ -50,28 +51,28 @@ def test_load_or_create_owner_and_custom_fields(tmp_path):
 def test_wrong_passphrase_is_a_friendly_error(tmp_path):
     path = tmp_path / "sealed.key"
     AgentIdentity.load_or_create(path, passphrase="right")
-    with pytest.raises(ValueError, match="wrong passphrase or corrupt"):
+    with pytest.raises(KeyFileError, match="wrong passphrase or corrupt"):
         AgentIdentity.load_or_create(path, passphrase="wrong")
 
 
 def test_encrypted_file_without_passphrase_says_so(tmp_path):
     path = tmp_path / "sealed.key"
     AgentIdentity.load_or_create(path, passphrase="secret")
-    with pytest.raises(ValueError, match="is encrypted — pass the passphrase"):
+    with pytest.raises(KeyFileError, match="is encrypted — pass the passphrase"):
         AgentIdentity.load_or_create(path)
 
 
 def test_plain_file_with_passphrase_refuses_to_guess(tmp_path):
     path = tmp_path / "plain.key"
     AgentIdentity.load_or_create(path)
-    with pytest.raises(ValueError, match="is not encrypted, but a passphrase"):
+    with pytest.raises(KeyFileError, match="is not encrypted, but a passphrase"):
         AgentIdentity.load_or_create(path, passphrase="secret")
 
 
 def test_corrupt_file_is_a_friendly_error(tmp_path):
     path = tmp_path / "broken.key"
     path.write_bytes(b"\x01\x02\x03")
-    with pytest.raises(ValueError, match="corrupt"):
+    with pytest.raises(KeyFileError, match="corrupt"):
         load_keys(path)
 
 

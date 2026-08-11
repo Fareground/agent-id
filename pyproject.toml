@@ -40,6 +40,8 @@ dev = [
 
 [project.urls]
 Repository = "https://github.com/Fareground/agent-id"
+Changelog = "https://github.com/Fareground/agent-id/blob/main/CHANGELOG.md"
+Issues = "https://github.com/Fareground/agent-id/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/fg_agent_id"]

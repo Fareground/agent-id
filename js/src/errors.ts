@@ -20,3 +20,6 @@ export class DelegationError extends AgentIdError {}
 export class RotationError extends AgentIdError {}
 
 export class SpendScopeError extends AgentIdError {}
+
+/** Key file cannot be read: wrong passphrase, wrong format, or corrupt. */
+export class KeyFileError extends AgentIdError {}

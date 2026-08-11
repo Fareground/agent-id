@@ -8,7 +8,14 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { AgentIdentity, OwnerIdentity, loadKeys, loadOrCreateKeys, saveKeys } from "../src/index.js";
+import {
+  AgentIdentity,
+  KeyFileError,
+  OwnerIdentity,
+  loadKeys,
+  loadOrCreateKeys,
+  saveKeys,
+} from "../src/index.js";
 
 async function withTmp(run: (dir: string) => Promise<void>) {
   const dir = await mkdtemp(join(tmpdir(), "fgid-keyfile-"));
@@ -53,7 +60,10 @@ test("wrong passphrase is a friendly error", async () => {
   await withTmp(async (dir) => {
     const path = join(dir, "sealed.key");
     await AgentIdentity.loadOrCreate(path, "right");
-    await assert.rejects(AgentIdentity.loadOrCreate(path, "wrong"), /wrong passphrase or corrupt/);
+    await assert.rejects(
+      AgentIdentity.loadOrCreate(path, "wrong"),
+      (err: unknown) => err instanceof KeyFileError && /wrong passphrase or corrupt/.test(String(err))
+    );
   });
 });
 

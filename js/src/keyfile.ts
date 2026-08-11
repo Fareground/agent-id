@@ -15,6 +15,7 @@
  */
 
 import { concatBytes } from "./bytes.js";
+import { KeyFileError } from "./errors.js";
 import { KeyPair } from "./keys.js";
 
 const MAGIC = new TextEncoder().encode("FGID");
@@ -32,7 +33,7 @@ async function nodeModules() {
     const [fs, crypto] = await Promise.all([import("node:fs/promises"), import("node:crypto")]);
     return { fs, crypto };
   } catch {
-    throw new Error("key files require a Node.js runtime (fs + crypto are unavailable here)");
+    throw new KeyFileError("key files require a Node.js runtime (fs + crypto are unavailable here)");
   }
 }
 
@@ -60,7 +61,7 @@ function startsWithMagic(data: Uint8Array): boolean {
 
 /** Seal a keypair under a passphrase into the FGID v1 container. */
 export async function encryptKeys(keys: KeyPair, passphrase: string): Promise<Uint8Array> {
-  if (!passphrase) throw new Error("passphrase must not be empty");
+  if (!passphrase) throw new KeyFileError("passphrase must not be empty");
   const { crypto } = await nodeModules();
   const salt = crypto.randomBytes(SALT_BYTES);
   const nonce = crypto.randomBytes(NONCE_BYTES);
@@ -80,10 +81,10 @@ export async function decryptKeys(data: Uint8Array, passphrase: string): Promise
   const head = header();
   const prefix = head.length + SALT_BYTES + NONCE_BYTES;
   if (data.length <= prefix + TAG_BYTES || !startsWithMagic(data)) {
-    throw new Error("not an encrypted fareground key file");
+    throw new KeyFileError("not an encrypted fareground key file");
   }
   if (data[MAGIC.length] !== VERSION) {
-    throw new Error(`unsupported key file version: ${data[MAGIC.length]}`);
+    throw new KeyFileError(`unsupported key file version: ${data[MAGIC.length]}`);
   }
   const salt = data.slice(head.length, head.length + SALT_BYTES);
   const nonce = data.slice(head.length + SALT_BYTES, prefix);
@@ -99,7 +100,7 @@ export async function decryptKeys(data: Uint8Array, passphrase: string): Promise
   try {
     plain = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
   } catch {
-    throw new Error("could not decrypt key file — wrong passphrase or corrupt");
+    throw new KeyFileError("could not decrypt key file — wrong passphrase or corrupt");
   }
   return KeyPair.fromBytes(new Uint8Array(plain));
 }
@@ -123,18 +124,18 @@ export async function loadKeys(path: string, passphrase: string | null = null): 
   const data = new Uint8Array(await fs.readFile(path));
   if (startsWithMagic(data)) {
     if (!passphrase) {
-      throw new Error(`key file ${path} is encrypted — pass the passphrase it was created with`);
+      throw new KeyFileError(`key file ${path} is encrypted — pass the passphrase it was created with`);
     }
     return decryptKeys(data, passphrase);
   }
   if (passphrase) {
-    throw new Error(
+    throw new KeyFileError(
       `key file ${path} is not encrypted, but a passphrase was given — ` +
         "refusing to guess which was intended"
     );
   }
   if (data.length !== RAW_KEY_BYTES) {
-    throw new Error(
+    throw new KeyFileError(
       `key file ${path} is corrupt: expected ${RAW_KEY_BYTES} raw bytes ` +
         `or an encrypted FGID container, got ${data.length} bytes`
     );

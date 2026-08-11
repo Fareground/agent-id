@@ -16,6 +16,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from .errors import KeyFileError
 from .keys import _KEYFILE_MAGIC, KeyPair
 
 _RAW_KEY_BYTES = 64
@@ -35,17 +36,22 @@ def load_keys(path: str | Path, passphrase: str | None = None) -> KeyPair:
     data = Path(path).read_bytes()
     if data.startswith(_KEYFILE_MAGIC):
         if not passphrase:
-            raise ValueError(
+            raise KeyFileError(
                 f"key file {path} is encrypted — pass the passphrase it was created with"
             )
-        return KeyPair.from_encrypted_bytes(data, passphrase)
+        try:
+            return KeyPair.from_encrypted_bytes(data, passphrase)
+        except KeyFileError:
+            raise
+        except ValueError as exc:
+            raise KeyFileError(str(exc)) from exc
     if passphrase:
-        raise ValueError(
+        raise KeyFileError(
             f"key file {path} is not encrypted, but a passphrase was given — "
             "refusing to guess which was intended"
         )
     if len(data) != _RAW_KEY_BYTES:
-        raise ValueError(
+        raise KeyFileError(
             f"key file {path} is corrupt: expected {_RAW_KEY_BYTES} raw bytes "
             f"or an encrypted FGID container, got {len(data)} bytes"
         )

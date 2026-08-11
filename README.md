@@ -115,7 +115,7 @@ byte-compatible across both languages. Owners persist the same way:
 ### Python
 
 ```python
-from fg_agent_id import AgentIdentity, OwnerIdentity
+from fg_agent_id import AgentCard, OwnerIdentity
 
 owner = OwnerIdentity.generate("acme-corp")
 agent = owner.create_agent("acme-buyer", scopes={"converse", "negotiate"})
@@ -124,6 +124,9 @@ card = agent.card(endpoints={"http": "https://buyer.example/inbox"})
 card.verify()                       # self-verifying: no registry needed
 print(agent.address)                # amp:key:<base58>
 print(card.did)                     # did:amp:<base58>
+
+wire = card.to_json()               # JSON-ready dict (json.dumps for transport)
+AgentCard.from_json(wire).verify()  # a peer re-verifies from the wire form
 
 scopes = agent.delegation_chain.verify(agent.address)
 assert scopes == frozenset({"converse", "negotiate"})
@@ -201,6 +204,10 @@ const issued = store.consume(response.challengeId);
 if (!issued) throw new Error("challenge already used or expired");
 await response.verify(issued, "https://verifier.example");
 ```
+
+Note: `card.toJSON()` returns a plain object, not a string — run it through
+`JSON.stringify` for transport, and `AgentCard.fromJSON` accepts the parsed
+object back.
 
 See [`js/README.md`](js/README.md) for the full TypeScript surface and parity
 notes against the Python reference. Runnable versions of these flows — card

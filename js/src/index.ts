@@ -116,6 +116,7 @@ export {
   ParticipantIdentity,
   DEFAULT_DELEGATION_TTL_SECONDS,
 } from "./identity.js";
+export { KeyFileError } from "./errors.js";
 export {
   encryptKeys,
   decryptKeys,

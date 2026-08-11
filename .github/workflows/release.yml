@@ -52,6 +52,9 @@ jobs:
   publish-npm:
     needs: publish-pypi
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     defaults:
       run:
         working-directory: js
@@ -71,6 +74,6 @@ jobs:
           fi
       - run: npm ci
       - run: npm test
-      - run: npm publish
+      - run: npm publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

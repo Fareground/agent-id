@@ -32,7 +32,7 @@ print(f"agent DID     : {card.did}")
 print(f"operator      : {card.operator}")
 
 # A peer receives the card as JSON and verifies it — the address IS the key.
-received = AgentCard.model_validate(card.model_dump())
+received = AgentCard.from_json(card.to_json())
 received.verify()
 print("card verifies : yes (self-certifying, no registry)")
 

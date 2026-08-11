@@ -3,7 +3,9 @@
 import pytest
 
 from fg_agent_id import (
+    AgentCard,
     AgentIdentity,
+    CardError,
     Delegation,
     DelegationChain,
     KeyPair,
@@ -116,3 +118,35 @@ def test_delegation_wrong_terminal_subject_rejected():
     )
     with pytest.raises(DelegationError, match="terminates"):
         chain.verify(c.address)
+
+
+def test_card_to_json_from_json_round_trip():
+    identity = AgentIdentity.generate("alice")
+    card = identity.card(endpoints={"http": "https://alice.example"})
+    wire = card.to_json()
+    assert isinstance(wire, dict) and wire["kind"] == "agent"
+    restored = AgentCard.from_json(wire)
+    restored.verify()
+    assert restored == card
+
+
+@pytest.mark.parametrize(
+    "junk",
+    [
+        {"foo": 1},
+        {},
+        {"address": "amp:key:x"},  # name/keys missing
+        "not a dict",
+        None,
+        42,
+        [{"address": "a"}],
+    ],
+)
+def test_card_deserialization_rejects_junk_with_card_error(junk):
+    with pytest.raises(CardError, match="invalid agent card"):
+        AgentCard.from_json(junk)
+
+
+def test_card_error_message_names_missing_fields():
+    with pytest.raises(CardError, match="missing address, name, signing_key, agreement_key"):
+        AgentCard.model_validate({"foo": 1})

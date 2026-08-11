@@ -41,7 +41,11 @@ test("non-canonical base64 signature spellings are rejected", () => {
 test("tampered card signature fails", async () => {
   const { keys, address } = await agent();
   const card = await AgentCard.create({ keys, address, name: "victim" });
-  const tampered = card.with({ signature: card.signature.slice(0, -4) + "AA==" });
+  // Deterministic tamper: flip the first signature byte (guaranteed different;
+  // appending a fixed suffix was a no-op whenever the real sig ended the same way).
+  const sigBytes = decodeSignature(card.signature);
+  sigBytes[0] = (sigBytes[0] ?? 0) ^ 0xff;
+  const tampered = card.with({ signature: Buffer.from(sigBytes).toString("base64") });
   await assert.rejects(tampered.verify(), /signature/i);
   // Tampered payload under the original signature also fails.
   const renamed = AgentCard.fromJSON({ ...card.toJSON(), name: "mallory" });

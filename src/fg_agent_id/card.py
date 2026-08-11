@@ -18,7 +18,7 @@ from enum import StrEnum
 from typing import Any
 
 from .address import signing_key_from_address
-from .errors import SignatureError
+from .errors import CardError, SignatureError
 from .keys import KeyPair, PublicKeys, base58_decode
 from .serde import require_mapping, require_str
 from .signing import CONTEXT_AGENT_CARD, sign_payload, verify_payload
@@ -209,15 +209,40 @@ class AgentCard:
         data.update(self.extra)
         return data
 
+    def to_json(self) -> dict[str, Any]:
+        """The card as a JSON-ready dict (pass to ``json.dumps`` for the wire)."""
+        return self.model_dump(mode="json")
+
+    @classmethod
+    def from_json(cls, data: Any) -> AgentCard:
+        """Deserialize a card from its wire dict; raises ``CardError`` if malformed."""
+        return cls.model_validate(data)
+
+    _REQUIRED_FIELDS = ("address", "name", "signing_key", "agreement_key")
+
     @classmethod
     def model_validate(cls, data: Any) -> AgentCard:
+        """Deserialize a card from its wire dict.
+
+        This is the hostile-input front door: anything malformed raises
+        ``CardError`` rather than leaking a raw TypeError.
+        """
         if isinstance(data, cls):
             return data
-        require_mapping("card", data)
+        if not isinstance(data, dict):
+            raise CardError(
+                f"invalid agent card: expected a mapping, got {type(data).__name__}"
+            )
+        missing = [name for name in cls._REQUIRED_FIELDS if name not in data]
+        if missing:
+            raise CardError("invalid agent card: missing " + ", ".join(missing))
         known = {f.name for f in fields(cls)} - {"extra"}
         kwargs = {k: v for k, v in data.items() if k in known}
         extra = {k: v for k, v in data.items() if k not in known and k != "extra"}
-        return cls(**kwargs, extra=extra)
+        try:
+            return cls(**kwargs, extra=extra)
+        except (TypeError, ValueError) as exc:
+            raise CardError(f"invalid agent card: {exc}") from exc
 
     def model_copy(self, update: dict[str, Any] | None = None) -> AgentCard:
         update = dict(update or {})
