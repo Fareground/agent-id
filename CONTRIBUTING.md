@@ -45,6 +45,15 @@ Both implementations must reproduce every golden vector in
   `uint16be(len(tag)) || tag || canonical_json(payload)`. Any change to
   canonicalization is a wire-breaking change.
 
+## Versioning
+
+The Python package (`pyproject.toml`) and the npm package
+(`js/package.json`, mirrored in `PACKAGE_VERSION` in `version.py` /
+`version.ts`) share **one version number and move in lockstep** — a release
+tag `vX.Y.Z` publishes both at X.Y.Z. Anything that changes emitted bytes
+(wire format, canonicalization, default protocol version) is at least a
+minor bump and a changelog entry.
+
 ## Changing the wire format
 
 The golden vectors in `spec/vectors.json` are what other implementations test

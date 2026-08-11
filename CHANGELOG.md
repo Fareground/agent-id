@@ -1,13 +1,37 @@
 # Changelog
 
 All notable changes to `fg-agent-id`. Format loosely follows Keep a Changelog.
-The wire protocol version is tracked separately from the package version and
-remains `0.1` until the v1.0 freeze.
+The wire protocol version (`amp/x.y`, see `spec/SPEC.md`) is tracked
+separately from the package version; the Python and npm package versions move
+in lockstep (see CONTRIBUTING.md).
 
-## [Unreleased]
+## [0.2.0] — 2026-08-10
+
+### Fixed
+
+- **Wire protocol version aligned at `amp/0.2`.** The domain-tag rename below
+  was a wire-breaking change and `spec/SPEC.md` already declared `amp/0.2`,
+  but both implementations still stamped `"amp": "0.1"` into cards and the
+  golden vectors. `SPEC_VERSION` (`amp/0.2`) and `DEFAULT_PROTOCOL_VERSION`
+  (`0.2`) now live in one place per language (`version.py` / `version.ts`),
+  vectors were regenerated, and a conformance test on each side asserts
+  implementation == vectors. Cards emitted with defaults now carry `0.2` —
+  a byte-level change to signed payloads, hence the minor bump.
+- **npm package is installable.** Renamed `@fg/agent-id` →
+  `@fareground/agent-id`; added `prepare` (builds `dist/` on git installs),
+  a `files` whitelist, `publishConfig.access: public`, and repository/license
+  metadata.
 
 ### Added
 
+- **TypeScript facade layer.** `AgentIdentity` / `OwnerIdentity`
+  (+ `ParticipantIdentity` alias) ported from the Python reference, async
+  where WebCrypto requires it, with mirrored tests.
+- **Runnable examples** (`examples/python`, `examples/js`): card
+  issue/verify, proof-of-possession round-trip, key rotation.
+- **Release automation** (`.github/workflows/release.yml`): on a `v*` tag —
+  sdist+wheel build, twine check, tag/version guard, clean-venv smoke test,
+  PyPI trusted publishing, then npm publish. `SECURITY.md` added.
 - **Pluggable challenge store.** `ChallengeStoreBase` defines the store
   contract (issue + atomic single-use consume); the in-process store is now
   `InMemoryChallengeStore` (the `ChallengeStore` name remains as its alias)
