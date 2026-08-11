@@ -83,7 +83,7 @@ pip install "fg-agent-id[redis] @ git+https://github.com/Fareground/agent-id.git
 **TypeScript** (zero runtime dependencies, WebCrypto):
 
 ```bash
-npm install @fg/agent-id
+npm install @fareground/agent-id
 ```
 
 ## Usage
@@ -149,14 +149,14 @@ agent_keys = KeyPair.from_encrypted_bytes(sealed, passphrase)
 ### TypeScript
 
 Crypto operations are `async` (WebCrypto). Everything is exported from
-`@fg/agent-id`.
+`@fareground/agent-id`.
 
 ```ts
 import {
   KeyPair, addressFromSigningKey,
   AgentCard, Delegation, DelegationChain,
   Challenge, ChallengeStore,
-} from "@fg/agent-id";
+} from "@fareground/agent-id";
 
 const keys = await KeyPair.generate();
 const address = addressFromSigningKey(keys.public_.signing);
@@ -202,7 +202,7 @@ notes against the Python reference.
 
 ```
 src/fg_agent_id/   Python reference implementation
-js/                TypeScript implementation (@fg/agent-id)
+js/                TypeScript implementation (@fareground/agent-id)
 spec/              Wire spec (SPEC.md) + cross-implementation golden vectors
 tests/             Python test suite
 ```

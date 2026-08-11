@@ -1,7 +1,13 @@
 {
-  "name": "@fg/agent-id",
+  "name": "@fareground/agent-id",
   "version": "0.2.0",
   "description": "TypeScript implementation of the agent-id standard (amp/0.2): self-certifying agent identities, signed cards, delegation, revocation, proof of possession, and key rotation. Zero runtime dependencies.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fareground/agent-id.git",
+    "directory": "js"
+  },
   "type": "module",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
@@ -11,17 +17,24 @@
       "import": "./dist/src/index.js"
     }
   },
+  "files": [
+    "dist/src",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "build": "tsc",
+    "prepare": "tsc",
     "test": "tsc && node --test \"dist/test/*.test.js\"",
     "conformance": "tsc && node --test dist/test/conformance.test.js"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
     "typescript": "^5.5.0"
-  },
-  "license": "Apache-2.0"
+  }
 }

@@ -1,4 +1,4 @@
-# @fg/agent-id (TypeScript)
+# @fareground/agent-id (TypeScript)
 
 Standalone TypeScript implementation of the agent-id standard (`amp/0.2`) —
 the second independent implementation, proving the wire format is
@@ -33,7 +33,7 @@ side can add cases without breaking this runner.
 
 ## API sketch
 
-Everything is exported from `@fg/agent-id` (see `src/index.ts`). Crypto
+Everything is exported from `@fareground/agent-id` (see `src/index.ts`). Crypto
 operations are `async` (WebCrypto).
 
 ```ts
@@ -43,7 +43,7 @@ import {
   RevocationRegistry, Challenge, ChallengeStore,
   Inception, KeyRotation, RotationChain, RotationRegistry, keyCommitment,
   addressToDid, didDocument, resolve,
-} from "@fg/agent-id";
+} from "@fareground/agent-id";
 
 const keys = await KeyPair.generate();
 const address = addressFromSigningKey(keys.public_.signing);

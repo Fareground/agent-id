@@ -1,5 +1,5 @@
 /**
- * @fg/agent-id — TypeScript implementation of the fg-agent-id standard
+ * @fareground/agent-id — TypeScript implementation of the fg-agent-id standard
  * (amp/0.2). Interoperates byte-for-byte with the Python reference; see
  * ../spec/SPEC.md and the conformance suite in test/.
  */
