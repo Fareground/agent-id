@@ -45,6 +45,7 @@ from fg_agent_id.signing import (
     CONTEXT_KEY_ROTATION,
     CONTEXT_REVOCATION,
 )
+from fg_agent_id.version import SPEC_VERSION
 
 SEED_A = bytes(range(32))
 SEED_B = bytes(range(32, 64))
@@ -180,7 +181,7 @@ def build() -> dict:
     )
 
     return {
-        "version": "amp/0.2",
+        "version": SPEC_VERSION,
         "note": (
             "Golden vectors for fg-agent-id. Signatures are computed over "
             "signing_input(context, payload) = uint16be(len(tag)) || tag || "

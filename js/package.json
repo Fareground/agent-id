@@ -1,6 +1,6 @@
 {
   "name": "@fg/agent-id",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "TypeScript implementation of the agent-id standard (amp/0.2): self-certifying agent identities, signed cards, delegation, revocation, proof of possession, and key rotation. Zero runtime dependencies.",
   "type": "module",
   "main": "./dist/src/index.js",

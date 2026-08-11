@@ -128,3 +128,14 @@ def test_delegation_digest_vector():
 def test_signature_bytes_are_valid_base64():
     for case in VECTORS["artifacts"].values():
         assert len(base64.b64decode(case["signature_b64"], validate=True)) == 64
+
+
+def test_protocol_version_matches_vectors():
+    """Both implementations and the golden vectors must agree on the wire
+    version: the spec string and the `amp` field stamped into default cards."""
+    from fg_agent_id import DEFAULT_PROTOCOL_VERSION, SPEC_VERSION
+
+    assert SPEC_VERSION == VECTORS["version"]
+    assert SPEC_VERSION == f"amp/{DEFAULT_PROTOCOL_VERSION}"
+    card_payload = VECTORS["artifacts"]["agent_card"]["payload"]
+    assert card_payload["amp"] == DEFAULT_PROTOCOL_VERSION

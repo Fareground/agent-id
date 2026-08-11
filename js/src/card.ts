@@ -14,8 +14,9 @@ import { SignatureError } from "./errors.js";
 import { KeyPair, PublicKeys } from "./keys.js";
 import { requireMapping, requireString } from "./serde.js";
 import { CONTEXT_AGENT_CARD, signPayload, verifyPayload } from "./signing.js";
+import { DEFAULT_PROTOCOL_VERSION } from "./version.js";
 
-export const DEFAULT_PROTOCOL_VERSION = "0.1";
+export { DEFAULT_PROTOCOL_VERSION };
 
 export type ParticipantKind = "agent" | "human" | "service";
 

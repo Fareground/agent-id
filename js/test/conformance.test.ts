@@ -16,6 +16,8 @@ import { fileURLToPath } from "node:url";
 
 import {
   AgentCard,
+  DEFAULT_PROTOCOL_VERSION,
+  SPEC_VERSION,
   addressFromSigningKey,
   base58Encode,
   bytesToHex,
@@ -229,4 +231,10 @@ test("report unknown top-level vector sections", () => {
     if (!known.has(key)) console.log(`SKIP unknown vector section: ${key}`);
   }
   assert.equal(vectors.domain, "fg-agent-id/v1");
+});
+
+test("protocol version agrees with the golden vectors", () => {
+  assert.equal(SPEC_VERSION, vectors.version);
+  assert.equal(SPEC_VERSION, `amp/${DEFAULT_PROTOCOL_VERSION}`);
+  assert.equal(vectors.artifacts?.agent_card?.payload?.amp, DEFAULT_PROTOCOL_VERSION);
 });

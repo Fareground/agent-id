@@ -91,7 +91,7 @@ from .spend import (
     parse_spend_scope,
     spend_authority_for,
 )
-from .version import DEFAULT_PROTOCOL_VERSION
+from .version import DEFAULT_PROTOCOL_VERSION, PACKAGE_VERSION, SPEC_VERSION
 
 
 @dataclass(frozen=True)
@@ -182,8 +182,11 @@ __all__ = [
     "CONTEXT_KEY_REVOCATION",
     "CONTEXT_KEY_ROTATION",
     "CONTEXT_REVOCATION",
+    "DEFAULT_PROTOCOL_VERSION",
     "DEVICE_SCOPE",
     "DOMAIN",
+    "PACKAGE_VERSION",
+    "SPEC_VERSION",
     "ENTRY_KIND_KEY_REVOCATION",
     "ENTRY_KIND_REVOCATION",
     "PURPOSE_AUTHENTICATE",
