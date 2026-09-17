@@ -17,6 +17,7 @@
   <a href="https://www.npmjs.com/package/@fareground/agent-id"><img alt="npm" src="https://img.shields.io/npm/v/%40fareground%2Fagent-id?style=flat-square" /></a>
   <img alt="Python" src="https://img.shields.io/badge/python-3.11+-3b82f6?style=flat-square" />
   <img alt="TypeScript" src="https://img.shields.io/badge/typescript-node%2020+-2dd4a7?style=flat-square" />
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-lightgrey?style=flat-square" /></a>
 </p>
 
 ---
@@ -28,6 +29,13 @@ cryptographic identity that verifies on its own, with no registry, certificate
 authority, or central lookup. It was extracted from the [Agent Messaging
 Protocol (AMP)](https://github.com/Fareground/agent-messaging)
 as a standalone standard any protocol can adopt.
+
+Use this package when an agent, human, or service needs a portable identity,
+signed card, delegated authority, proof of possession, key rotation, or
+revocation. It answers “who signed this, and what authority were they given?”
+It does not transport messages, authenticate application users, or manage
+conversation history. For encrypted agent-to-agent sessions, use
+[`agent-messaging`](https://github.com/Fareground/agent-messaging).
 
 ### Identity model
 
@@ -278,6 +286,12 @@ byte-for-byte; regenerate them with `python spec/generate_vectors.py`.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, running the test
 suites, and the rules around changing the wire format.
+
+## License
+
+The Python and TypeScript implementations are licensed under Apache License
+2.0. See [LICENSE](LICENSE) and [js/LICENSE](js/LICENSE). Report
+vulnerabilities through [SECURITY.md](SECURITY.md), not a public issue.
 
 ---
 
