@@ -81,6 +81,11 @@ const state = await new RotationChain(inception).resolve();
 Wire-level primitives are exported too: `canonicalJson`, `signingInput`,
 `signPayload` / `verifyByAddress`, `base58Encode/Decode`, `canonicalTimestamp`.
 
+## License
+
+Apache License 2.0. See [LICENSE](LICENSE) for the full terms. The Python
+reference implementation uses the same license in the repository root.
+
 ## Parity notes vs the Python reference
 
 - Serialization surface is `toJSON()` / `fromJSON()` (instead of pydantic-style
