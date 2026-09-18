@@ -39,7 +39,9 @@ dev = [
 ]
 
 [project.urls]
+Homepage = "https://github.com/Fareground/agent-id"
 Repository = "https://github.com/Fareground/agent-id"
+Documentation = "https://github.com/Fareground/agent-id/blob/main/README.md"
 Changelog = "https://github.com/Fareground/agent-id/blob/main/CHANGELOG.md"
 Issues = "https://github.com/Fareground/agent-id/issues"
 
